@@ -1,5 +1,7 @@
 //sandbox
 
+//reference: http://www.cs.berkeley.edu/~bh/v2ch14/manual.html
+
 //add support in jrunscript
 if(typeof console == 'undefined') {
 	if(typeof print == 'function') {
@@ -12,8 +14,8 @@ if(typeof console == 'undefined') {
 
 var example_program = "forward 100\nprint \"test";
 
-var tokens = ["\n", " ", '"'];
-var tokensNames = ["end_line_n", "space", "strMark"];
+var tokens = ["\n", " ", '"', ';'];
+var tokensNames = ["end_line_n", "space", "strMark", "semicolon"];
 /*var tokens = {
 	"end_line_n": "\n",
 	"space": " "
@@ -47,16 +49,21 @@ var sExecute	= new State();
 var sParam		= new State();
 var sFunc		= new State();
 var sError		= new State();
+var sComment	= new State();
 
 sNothing.state = states.nothing;
 sNothing.expect[tokensNames.end_line_n] = sNothing;
 sNothing.expect[tokensNames.space]		= sNothing;
 sNothing.expect[tokensNames.strMark]	= sError;
+sNothing.expect[tokensNames.semicolon] = sComment;
 
 sNothing.expectWithWord[tokensNames.end_line_n] = sExecute;
 sNothing.expectWithWord[tokensNames.space] = sExecute;
 
 sFunc.state = states.func;
+
+sComment.state = states.comment;
+sComment.except[tokensNames.end_line_n] = sNothing;
 
 parser(example_program);
 
