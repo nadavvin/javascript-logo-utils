@@ -1,5 +1,15 @@
 //sandbox
 
+//add support in jrunscript
+if(typeof console == 'undefined') {
+	if(typeof print == 'function') {
+		console = {};
+		console.log = function() {
+			print(JSON.stringify(arguments));
+		}
+	}
+}
+
 var example_program = "forward 100\nprint \"test";
 
 var tokens = ["\n", " ", '"'];
